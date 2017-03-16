@@ -1,0 +1,43 @@
+{
+  "name": "mdla-pf-manager-client",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:6005",
+  "dependencies": {
+    "antd": "^2.8.1",
+    "global": "^4.3.1",
+    "history": "^4.6.0",
+    "immutable": "^3.8.1",
+    "keymirror": "^0.1.1",
+    "less": "^2.7.2",
+    "lodash": "^4.17.4",
+    "moment": "^2.17.1",
+    "npm-run-all": "^4.0.2",
+    "nprogress": "^0.2.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-intl": "^2.2.3",
+    "react-intl-redux": "^0.4.1",
+    "react-redux": "^5.0.3",
+    "react-router": "^4.0.0",
+    "react-router-config": "^1.0.0-beta.1",
+    "react-router-dom": "^4.0.0",
+    "react-router-redux": "^4.0.8",
+    "redux": "^3.6.0",
+    "redux-create-reducer": "^1.1.1",
+    "socket.io-client": "^1.7.3"
+  },
+  "devDependencies": {
+    "autoless": "^0.1.7",
+    "react-scripts": "0.9.5"
+  },
+  "scripts": {
+    "build-css": "lessc src/index.less src/index.css",
+    "watch-css": "npm run build-css && lessc src/index.less src/index.css",
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build": "npm run build-css && react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

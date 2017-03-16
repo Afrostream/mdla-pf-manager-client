@@ -1,0 +1,32 @@
+@import "./components/App";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+  color: #333333;
+}
+
+#root {
+  height: 100%;
+  min-height: 100%;
+}
+
+@-webkit-keyframes autofill {
+  to {
+    color: #666;
+    background: #FFFFFF;
+  }
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  background-color: rgb(255, 255, 255);
+  background-image: none;
+  color: rgb(0, 0, 0);
+  -webkit-animation-name: autofill;
+  -webkit-animation-fill-mode: both;
+}

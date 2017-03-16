@@ -1,0 +1,80 @@
+.sidebar {
+  overflow-y: initial !important;
+  .menu-content {
+    a.btn-home {
+      display: inline-block;
+      overflow: hidden;
+      color: @dark-half;
+      .app-logo {
+        display: inline-block;
+        height: 50px;
+        vertical-align: middle;
+      }
+      span {
+        display: inline-block;
+        font-size: 1.8em;
+        font-family: 'Lobster', cursive;
+      }
+    }
+
+    > .ant-menu {
+      //position: relative;
+      //z-index: 1;
+      height: ~"calc(100vh - 48px)";
+    }
+
+    background: #fff;
+    color: #999;
+    &.dark {
+      background: @dark-half;
+      .switchtheme {
+        background-color: @dark-half;
+      }
+    }
+  }
+
+  .switchtheme {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    height: 48px;
+    display: flex;
+    background: #fff;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px 0 10px;
+    overflow: hidden;
+    z-index: 1000;
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+  &.sidebar-right {
+    width: 40%;
+    .pane-toggle {
+      left: -23px;
+    }
+  }
+
+  .pane-toggle {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 100%;
+    .widget-pane-toggle-button {
+      width: 23px;
+      height: 50px;
+      cursor: pointer;
+      background: #fff;
+      border: none;
+      outline: 0;
+      transition: all 0.3s linear;
+      //box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.3);
+      i {
+        color: @dark-half;
+      }
+    }
+  }
+}
