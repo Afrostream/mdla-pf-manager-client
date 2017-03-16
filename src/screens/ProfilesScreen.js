@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import * as FetchActionCreators from '../actions/fetch'
 import { Row, Col, Card, Button, Table, Tag, Badge } from 'antd'
 import ProfileCreateForm from '../components/Forms/ProfileCreateForm'
+import { getStatusColor, getStatusProgress } from '../core/utils'
 
 class PofilesScreen extends Component {
 
@@ -92,7 +93,9 @@ class PofilesScreen extends Component {
                                 key: 'presets',
                                 render: (record) => (
                                   <div>
-                                    {record.map((item) => <Tag key={item._id}>{` ${item.name} `}</Tag>)}
+                                    {record.map((item) => <Tag key={item._id}><Badge
+                                      status={getStatusColor(item.status)}
+                                      strokeWidth={5}/>{`${item.name}`}</Tag>)}
                                   </div>
                                 )
                               }]}/>}
