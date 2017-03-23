@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://localhost:6005",
   "dependencies": {
-    "antd": "^2.8.1",
+    "antd": "^2.8.2",
     "global": "^4.3.1",
     "history": "^4.6.0",
     "immutable": "^3.8.1",

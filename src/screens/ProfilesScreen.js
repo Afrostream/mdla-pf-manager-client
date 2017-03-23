@@ -3,7 +3,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as FetchActionCreators from '../actions/fetch'
-import { Row, Col, Card, Button, Table, Tag, Badge } from 'antd'
+import { Row, Col, Card, Button, Table, Tag, Tooltip, Badge } from 'antd'
 import ProfileCreateForm from '../components/Forms/ProfileCreateForm'
 import { getStatusColor, getStatusProgress } from '../core/utils'
 
@@ -15,7 +15,7 @@ class PofilesScreen extends Component {
   }
 
   async componentDidMount () {
-    const {props:{dispatch}} =this
+    const {props: {dispatch}} = this
     await dispatch(FetchActionCreators.fetchApi({route: 'presets'}))
     await dispatch(FetchActionCreators.fetchApi({route: 'profiles'}))
   }
@@ -29,7 +29,7 @@ class PofilesScreen extends Component {
   }
 
   handleCreate () {
-    const {form, props:{dispatch}, state:{fields}} = this
+    const {form, props: {dispatch}, state: {fields}} = this
     const id = fields._id
     const method = (id && 'PUT') || 'POST'
     form.validateFields((err, params) => {
@@ -57,7 +57,7 @@ class PofilesScreen extends Component {
 
   render () {
 
-    const {props:{Fetch}} =this
+    const {props: {Fetch}} = this
 
     const data = Fetch.get('profiles')
     const fields = this.state.fields
@@ -93,9 +93,9 @@ class PofilesScreen extends Component {
                                 key: 'presets',
                                 render: (record) => (
                                   <div>
-                                    {record.map((item) => <Tag key={item._id}><Badge
+                                    {record.map((item) => <Tooltip key={item._id} title={item.statusMessage}><Tag><Badge
                                       status={getStatusColor(item.status)}
-                                      strokeWidth={5}/>{`${item.name}`}</Tag>)}
+                                      strokeWidth={5}/>{`${item.name}`}</Tag></Tooltip>)}
                                   </div>
                                 )
                               }]}/>}

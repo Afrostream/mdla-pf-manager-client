@@ -1,10 +1,13 @@
 import React from 'react'
 import _ from 'lodash'
-import { Button, Modal, Form, Input, Radio, Select, Row, Col } from 'antd'
+import { Badge, Button, Modal, Form, Input, Radio, Select, Row, Col } from 'antd'
+import { getStatusColor, getStatusProgress } from '../../core/utils'
 import AudioStreamConfigForm from './AudioStreamConfigForm'
 import VideoStreamConfigForm from './VideoStreamConfigForm'
+
 const FormItem = Form.Item
 const Option = Select.Option
+const OptGroup = Select.OptGroup
 
 export default Form.create({
   mapPropsToFields(props) {
@@ -22,7 +25,11 @@ export default Form.create({
       ])
       .flattenJson()
       .mapValues((value, prop) => {
-        return {...{prop}, value}
+        let mapVal = value
+        if (_.isArray(value)) {
+          mapVal = _.map(value, (item) => ({key: item._id.toString(), label: item.name}))
+        }
+        return {...{prop}, mapVal}
       })
       .value()
     return plainObj
@@ -32,12 +39,17 @@ export default Form.create({
     const {visible, onCancel, onCreate, form, Fetch} = props
     const {getFieldDecorator, getFieldValue} = form
     const presetmaps = Fetch.get('presetmaps')
-    const presetmapsList = (presetmaps && _.map(presetmaps.toJS(), (preset) =>
-        <Option value={preset}
-                key={preset._id}>{`${preset.providerName} ${preset.name}`}</Option>
+    const presetmapsList = (presetmaps && _.map(presetmaps.toJS(), (preset, key) =>
+        <Option key={preset._id.toString()}>{`${preset.providerName} ${preset.name}`}</Option>
       )) || [];
 
-    const presetsMapInitial = (getFieldValue('mapProvidersPresets') || []);
+    const getDecoratorValue = (values = []) => {
+      const presetsValue = values.map((presetValue) => {
+        const item = presetmaps.find((preset) => preset.get('_id') == ( presetValue.key || presetValue._id || presetValue)).toJS();
+        return {_id: item._id, key: item._id.toString(), label: item.providerName};
+      });
+      return presetsValue;
+    }
 
     return (
       <Modal
@@ -108,10 +120,9 @@ export default Form.create({
                   type: 'array'
                 }
               ],
-              initialValue: presetsMapInitial,
-              valuePropName: 'providerName',
+              getValueFromEvent: getDecoratorValue
             })(
-              <Select multiple
+              <Select multiple labelInValue
                       searchPlaceholder="PresetMaps">
                 {presetmapsList}
               </Select>

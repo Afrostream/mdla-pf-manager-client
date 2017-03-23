@@ -1,8 +1,10 @@
 import React from 'react'
 import _ from 'lodash'
 import { Badge, Transfer, Button, Modal, Form, Input, Radio, Select, Row, Col } from 'antd'
+import { getStatusColor, getStatusProgress } from '../../core/utils'
 
 const FormItem = Form.Item
+const Option = Select.Option
 
 export default Form.create({
   mapPropsToFields(props) {
@@ -14,20 +16,35 @@ export default Form.create({
       ])
       .flattenJson()
       .mapValues((value, prop) => {
-        return {...{prop}, value}
+        let mapVal = value
+        if (_.isArray(value)) {
+          mapVal = _.map(value, (item) => ({key: item._id.toString(), label: item.name}))
+        }
+        return {...{prop}, value: mapVal}
       })
       .value()
     return plainObj
   }
+
 })(
   (props) => {
     const {visible, onCancel, onCreate, form, Fetch} = props
-    const {getFieldDecorator, getFieldValue} = form
+    const {getFieldDecorator} = form
     const presets = Fetch.get('presets')
-    const presetList = (presets && _.map(presets.toJS(), (preset) =>
-        <Option value={preset}
-                key={preset._id}>{`${preset.name}`}</Option>
+    const presetList = (presets && _.map(presets.toJS(), (preset, key) =>
+        <Option key={preset._id.toString()}><Badge
+          status={getStatusColor(preset.status)}
+          strokeWidth={5}/>{`${preset.name}`}</Option>
       )) || [];
+
+    const getDecoratorValue = (values = []) => {
+      const presetsValue = values.map((presetValue) => {
+        const item = presets.find((preset) => preset.get('_id') == ( presetValue.key || presetValue._id || presetValue)).toJS();
+        return {_id: item._id, key: item._id.toString(), label: item.name};
+      });
+      return presetsValue;
+    }
+
     return (
       <Modal
         visible={visible}
@@ -49,21 +66,6 @@ export default Form.create({
           <FormItem label="Description">
             {getFieldDecorator('description')(<Input type="textarea"/>)}
           </FormItem>
-          {/*<FormItem label="Presets">
-           {getFieldDecorator('presets', {
-           rules: [{required: true, message: 'Pleaseadd presets or create one before!', type: 'array'}],
-           })(<Transfer
-           dataSource={(presets && presets.toJS()) || []}
-           targetKeys={[]}
-           showSearch
-           listStyle={{
-           width: 250,
-           height: 300,
-           }}
-           operations={['to right', 'to left']}
-           render={item => `${item.name}`}
-           />)}
-           </FormItem>*/}
           <FormItem label="Presets">
             {getFieldDecorator('presets', {
               rules: [
@@ -72,9 +74,9 @@ export default Form.create({
                   type: 'array'
                 }
               ],
-              valuePropName: 'name',
+              getValueFromEvent: getDecoratorValue
             })(
-              <Select multiple
+              <Select multiple labelInValue
                       searchPlaceholder="PresetMaps">
                 {presetList}
               </Select>

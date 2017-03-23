@@ -3,7 +3,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as FetchActionCreators from '../actions/fetch'
-import { Row, Col, Card, Button, Table, Tag, Badge } from 'antd'
+import { Row, Col, Card, Button, Table, Tag, Tooltip, Badge } from 'antd'
 import PresetCreateForm from '../components/Forms/PresetCreateForm'
 import { getStatusColor, getStatusProgress } from '../core/utils'
 
@@ -15,7 +15,7 @@ class PresetsScreen extends Component {
   }
 
   async componentDidMount () {
-    const {props:{dispatch}} =this
+    const {props: {dispatch}} = this
     await dispatch(FetchActionCreators.fetchApi({route: 'presetmaps'}))
     await dispatch(FetchActionCreators.fetchApi({route: 'providers'}))
     await dispatch(FetchActionCreators.fetchApi({route: 'presets'}))
@@ -30,7 +30,7 @@ class PresetsScreen extends Component {
   }
 
   handleCreate () {
-    const {form, props:{dispatch}, state:{fields}} = this
+    const {form, props: {dispatch}, state: {fields}} = this
     const id = fields._id
     const method = (id && 'PUT') || 'POST'
     form.validateFields((err, params) => {
@@ -58,7 +58,7 @@ class PresetsScreen extends Component {
 
   render () {
 
-    const {props:{Fetch}} =this
+    const {props: {Fetch}} = this
 
     const data = Fetch.get('presets')
     const fields = this.state.fields
@@ -107,7 +107,8 @@ class PresetsScreen extends Component {
                                 key: 'mapProvidersPresets',
                                 render: (record) => (
                                   <div>
-                                    {record.map((item) => <Tag key={item._id}>{` ${item.providerName} `}</Tag>)}
+                                    {record.map((item) => <Tooltip key={item._id}
+                                                                   title={item.statusMessage}><Tag>{` ${item.providerName} `}</Tag></Tooltip>)}
                                   </div>
                                 )
                               }]}/>}
